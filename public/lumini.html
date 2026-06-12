@@ -9832,155 +9832,241 @@ ${mediaHtml}
 .lumini-pinned-badge i { transform: rotate(45deg); }
 
 /* ─────────────────────────────────────────────────────────────
-   6. RESTYLED EXPANDED POST MODAL — "Immersive" single-column
-   layout: full-bleed media on top, content flowing below.
-   We only override CSS — the existing JS keeps working.
+   6. EXPANDED POST MODAL — "Theater Mode"
+   - Pure black cinematic backdrop
+   - Media center-stage, large, with deep shadow
+   - Glass overlay panel from the bottom for caption / actions /
+     comments / composer (semi-transparent dark glass with gradient)
+   - Floating close button top-right
    ───────────────────────────────────────────────────────────── */
 
-/* Darker, more cinematic backdrop */
+/* Pure black backdrop */
 #post-detail-modal.open {
-  background: rgba(15, 23, 42, 0.85) !important;
-  backdrop-filter: blur(14px) !important;
+  background: rgba(0, 0, 0, 0.97) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  padding: 0 !important;
+  align-items: stretch !important;
 }
 
-/* Single column shell, narrower, scrollable */
+/* Shell = full screen, transparent */
 #post-detail-modal .pdm-shell {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
   flex-direction: column !important;
-  width: min(640px, 100%) !important;
-  max-width: 640px !important;
-  max-height: 92vh !important;
-  border-radius: 24px !important;
+  position: relative !important;
   overflow: hidden !important;
-  box-shadow: 0 24px 60px -16px rgba(0,0,0,0.4) !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
-/* Media full-bleed at top */
+/* Media takes the whole canvas, centered, contained */
 #post-detail-modal .pdm-media-side {
+  position: absolute !important;
+  inset: 0 !important;
   width: 100% !important;
-  flex: 0 0 auto !important;
-  max-height: 60vh !important;
+  height: 100% !important;
+  max-height: none !important;
   min-height: 0 !important;
-  background: #000 !important;
-  position: relative !important;
+  background: transparent !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  /* leave room at the bottom for the overlay panel */
+  padding: 60px 40px 48vh 40px !important;
   border-right: 0 !important;
+  z-index: 1 !important;
 }
 #post-detail-modal .pdm-media-side img,
 #post-detail-modal .pdm-media-side video {
-  width: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  width: auto !important;
   height: auto !important;
-  max-height: 60vh !important;
   object-fit: contain !important;
+  border-radius: 16px !important;
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.75) !important;
 }
 #post-detail-modal .pdm-media-side iframe {
-  width: 100% !important;
-  height: 56vh !important;
+  width: min(960px, 92vw) !important;
+  height: min(540px, 52vw) !important;
+  border-radius: 16px !important;
   border: 0 !important;
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.75) !important;
 }
-#post-detail-modal.no-media .pdm-shell { max-width: 560px !important; }
 
-/* Side content — now a single column, white background */
+/* No media — hide stage, expand the panel */
+#post-detail-modal.no-media .pdm-media-side { display: none !important; }
+#post-detail-modal.no-media .pdm-side {
+  max-height: 92vh !important;
+  height: auto !important;
+  min-height: 60vh !important;
+}
+
+/* Bottom overlay panel — dark glass with gradient fade at the top */
 #post-detail-modal .pdm-side {
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
   width: 100% !important;
-  flex: 1 1 auto !important;
   max-width: 100% !important;
-  min-width: 0 !important;
+  height: auto !important;
+  max-height: 48vh !important;
+  background: linear-gradient(
+    to top,
+    rgba(10, 15, 25, 0.95) 0%,
+    rgba(10, 15, 25, 0.88) 50%,
+    rgba(10, 15, 25, 0.6) 90%,
+    rgba(10, 15, 25, 0) 100%
+  ) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
   border-left: 0 !important;
-  background: white !important;
+  border-top: 0 !important;
   display: flex !important;
   flex-direction: column !important;
-  overflow: hidden !important;
+  color: white !important;
+  z-index: 2 !important;
+  padding-top: 48px !important; /* room for gradient fade */
+  pointer-events: auto !important;
 }
 
-/* Author header — clean, slightly larger */
+/* Author header — white text on dark */
 #post-detail-modal .pdm-header {
-  padding: 16px 20px !important;
-  border-bottom: 1px solid #f1f5f9 !important;
+  padding: 12px 24px 6px !important;
+  border-bottom: 0 !important;
+  background: transparent !important;
   flex-shrink: 0 !important;
-  background: white !important;
+  color: white !important;
 }
+#post-detail-modal .pdm-header h4,
+#post-detail-modal .pdm-header .font-bold,
+#post-detail-modal .pdm-header .text-slate-800 { color: white !important; }
+#post-detail-modal .pdm-header p,
+#post-detail-modal .pdm-header .text-slate-400 { color: rgba(255, 255, 255, 0.6) !important; }
 
-/* Caption — larger, more readable typography */
+/* Caption — readable white */
 #post-detail-modal .pdm-caption {
-  padding: 18px 22px !important;
-  flex-shrink: 0 !important;
-  border-bottom: 1px solid #f8fafc !important;
-  max-height: 32vh !important;
+  padding: 6px 24px 14px !important;
+  border-bottom: 0 !important;
+  max-height: 18vh !important;
+  background: transparent !important;
 }
-#post-detail-modal .pdm-caption p {
-  font-size: 15.5px !important;
-  line-height: 1.65 !important;
-  color: #0f172a !important;
-  font-weight: 400 !important;
-  letter-spacing: -0.005em !important;
+#post-detail-modal .pdm-caption p,
+#post-detail-modal .pdm-caption .text-slate-700 {
+  color: rgba(255, 255, 255, 0.95) !important;
+  font-size: 14.5px !important;
+  line-height: 1.6 !important;
 }
 
-/* Actions row — slightly larger tap targets */
+/* Actions — translucent, glass hover */
 #post-detail-modal .pdm-actions {
-  padding: 6px 16px !important;
-  border-top: 0 !important;
-  border-bottom: 1px solid #f1f5f9 !important;
+  padding: 4px 12px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-bottom: 0 !important;
+  background: transparent !important;
   display: flex !important;
+  flex-shrink: 0 !important;
 }
 #post-detail-modal .pdm-actions button {
-  padding: 12px 14px !important;
+  color: rgba(255, 255, 255, 0.75) !important;
+  padding: 10px 14px !important;
 }
+#post-detail-modal .pdm-actions button:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: white !important;
+}
+#post-detail-modal .pdm-actions button span { color: inherit !important; }
 
-/* Comments — fluid scrolling area */
+/* Comments scroll area — dense, dark */
 #post-detail-modal .pdm-comments {
-  padding: 14px 20px !important;
+  padding: 12px 20px !important;
   flex: 1 1 auto !important;
   overflow-y: auto !important;
+  background: transparent !important;
+  min-height: 0 !important;
+}
+#post-detail-modal .pdm-comments,
+#post-detail-modal .pdm-comments .text-slate-700,
+#post-detail-modal .pdm-comments .text-slate-800,
+#post-detail-modal .pdm-comments .text-slate-600 {
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+#post-detail-modal .pdm-comments .text-slate-400,
+#post-detail-modal .pdm-comments .text-slate-500 {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+/* Comment bubbles get a glass background */
+#post-detail-modal .pdm-comments .bg-slate-50,
+#post-detail-modal .pdm-comments .bg-slate-100,
+#post-detail-modal .pdm-comments .bg-white {
+  background: rgba(255, 255, 255, 0.06) !important;
 }
 
-/* Composer — pinned at bottom with a soft glass effect */
+/* Composer — solid dark bottom */
 #post-detail-modal .pdm-composer {
   padding: 12px 16px !important;
-  background: rgba(248, 250, 252, 0.85) !important;
-  backdrop-filter: blur(10px) !important;
-  border-top: 1px solid #f1f5f9 !important;
+  background: rgba(8, 12, 22, 0.97) !important;
+  backdrop-filter: blur(20px) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
   flex-shrink: 0 !important;
 }
-
-/* Close button — float over media for max canvas */
-#post-detail-modal .pdm-close {
-  background: rgba(15, 23, 42, 0.55) !important;
+#post-detail-modal .pdm-composer input,
+#post-detail-modal .pdm-composer textarea {
+  background: rgba(255, 255, 255, 0.08) !important;
   color: white !important;
-  backdrop-filter: blur(8px) !important;
-  top: 14px !important;
-  right: 14px !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+#post-detail-modal .pdm-composer input::placeholder,
+#post-detail-modal .pdm-composer textarea::placeholder {
+  color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Close button — floating glass circle, rotates on hover */
+#post-detail-modal .pdm-close {
+  position: fixed !important;
+  top: 20px !important;
+  right: 20px !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  z-index: 1000 !important;
+  width: 40px !important;
+  height: 40px !important;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+              background 0.25s ease !important;
 }
 #post-detail-modal .pdm-close:hover {
-  background: rgba(15, 23, 42, 0.8) !important;
+  background: rgba(255, 255, 255, 0.22) !important;
   color: white !important;
+  transform: rotate(90deg) scale(1.05) !important;
 }
 
-/* Mobile — borderless full-screen */
+/* Mobile — tighter spacing */
 @media (max-width: 640px) {
-  #post-detail-modal .pdm-shell {
-    border-radius: 0 !important;
-    max-width: 100% !important;
-    width: 100% !important;
-    max-height: 100vh !important;
-    height: 100% !important;
-  }
   #post-detail-modal .pdm-media-side {
-    max-height: 50vh !important;
+    padding: 50px 16px 50vh 16px !important;
   }
+  #post-detail-modal .pdm-side {
+    max-height: 55vh !important;
+  }
+  #post-detail-modal .pdm-close {
+    top: 12px !important;
+    right: 12px !important;
+    width: 36px !important;
+    height: 36px !important;
+  }
+  #post-detail-modal .pdm-header { padding: 10px 16px 4px !important; }
+  #post-detail-modal .pdm-caption { padding: 4px 16px 10px !important; }
+  #post-detail-modal .pdm-comments { padding: 10px 14px !important; }
 }
-
-/* Dark mode tweaks */
-.dark #post-detail-modal .pdm-side,
-.dark #post-detail-modal .pdm-header {
-  background: #0f172a !important;
-}
-.dark #post-detail-modal .pdm-header,
-.dark #post-detail-modal .pdm-caption,
-.dark #post-detail-modal .pdm-actions { border-color: rgba(255,255,255,0.08) !important; }
-.dark #post-detail-modal .pdm-composer {
-  background: rgba(15, 23, 42, 0.85) !important;
-  border-color: rgba(255,255,255,0.08) !important;
-}
-.dark #post-detail-modal .pdm-caption p { color: #f1f5f9 !important; }
 
 /* ─────────────────────────────────────────────────────────────
    7. "FOR YOU" feed toggle
